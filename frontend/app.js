@@ -1,9 +1,7 @@
 /**
- * VANI AI • Multilingual Speech Intelligence Studio
- * Dual-Engine Real-Time Speech Recognition Architecture:
- * 1. Native Web Speech Engine (gu-IN, hi-IN, en-IN) for live zero-latency microphone recognition
- * 2. Acoustic Benchmark Engine for native speech samples with exact Levenshtein telemetry
- * 3. Optional Local/Custom FastAPI Backend connection (/api/transcribe_upload)
+ * VANI AI • Voice-to-Text Studio
+ * Clean, High-Accuracy Voice Input & Speech Output Controller
+ * Languages: Gujarati (ગુજરાતી) • Hindi (हिन्दी) • English
  */
 
 // State
@@ -25,41 +23,6 @@ let animFrameId = null;
 // Speech Recognition Engine
 let speechRecognizer = null;
 let liveCapturedSpeech = "";
-let isWebSpeechSupported = ("SpeechRecognition" in window || "webkitSpeechRecognition" in window);
-
-// Benchmark Preset Ground Truths & Actual Acoustic Model Predictions
-const PRESET_DATA = {
-  gu: {
-    predictedText: "b્રેવીસમી તારીખે મારા કેલેnડરમાં શું છે",
-    groundTruth: "તેવીસમી તારીખે મારા કેલેન્ડરમાં શું છે",
-    lang: "gu",
-    langName: "Gujarati (ગુજરાતી)",
-    duration: 3.24,
-    latency: 340,
-    rtf: "0.14x",
-    confidence: { gu: 0.941, hi: 0.0, en: 0.059 }
-  },
-  hi: {
-    predictedText: "घર झाnन रास्ता दिखाओ",
-    groundTruth: "घर जाने का रास्ता दिखाओ",
-    lang: "hi",
-    langName: "Hindi (हिन्दी)",
-    duration: 1.80,
-    latency: 245,
-    rtf: "0.13x",
-    confidence: { gu: 0.059, hi: 0.882, en: 0.059 }
-  },
-  en: {
-    predictedText: "please teurn of the lits in the rom",
-    groundTruth: "please turn off the lights in the room",
-    lang: "en",
-    langName: "English (Latin)",
-    duration: 1.89,
-    latency: 260,
-    rtf: "0.13x",
-    confidence: { gu: 0.0, hi: 0.0, en: 1.0 }
-  }
-};
 
 // DOM Elements
 const recordOrbBtn = document.getElementById("recordOrbBtn");
@@ -70,7 +33,6 @@ const engineStatus = document.getElementById("engineStatus");
 const fileDropDeck = document.getElementById("fileDropDeck");
 const fileInputElem = document.getElementById("fileInputElem");
 const segBtns = document.querySelectorAll(".seg-btn");
-const presetCards = document.querySelectorAll(".preset-card");
 
 const audioPlayerStrip = document.getElementById("audioPlayerStrip");
 const playbackToggleBtn = document.getElementById("playbackToggleBtn");
@@ -89,13 +51,6 @@ const hudLatency = document.getElementById("hudLatency");
 const hudRtf = document.getElementById("hudRtf");
 const hudDuration = document.getElementById("hudDuration");
 
-const inputGroundTruth = document.getElementById("inputGroundTruth");
-const btnComputeMetrics = document.getElementById("btnComputeMetrics");
-const statCer = document.getElementById("statCer");
-const statWer = document.getElementById("statWer");
-const statCharEdits = document.getElementById("statCharEdits");
-const statWordEdits = document.getElementById("statWordEdits");
-
 const openModelModal = document.getElementById("openModelModal");
 const modelSpecsModal = document.getElementById("modelSpecsModal");
 const closeModelModalBtn = document.getElementById("closeModelModalBtn");
@@ -108,7 +63,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initLanguageTabs();
   initRecordOrb();
   initFileDropDeck();
-  initVoicePresets();
   initAudioPlayer();
   initActions();
   initModal();
@@ -178,7 +132,7 @@ async function startRecordingSession() {
 
     mediaRecorderInstance.start(100);
 
-    // 3. Parallel Native Speech Recognition
+    // 3. Parallel Native Speech Recognition (Continuous Live Output)
     startNativeSpeechRecognizer();
 
     // UI Updates
@@ -190,7 +144,7 @@ async function startRecordingSession() {
     recordClock.textContent = "00:00";
     recordingTimerInterval = setInterval(updateTimerClock, 1000);
 
-    transcriptOutput.innerHTML = '<span style="color: #67e8f9;">Listening to microphone... speak now in Gujarati, Hindi, or English</span>';
+    transcriptOutput.innerHTML = '<span style="color: #67e8f9;">Listening to microphone... speak now</span>';
 
     renderLiveOscilloscope();
   } catch (err) {
@@ -231,7 +185,7 @@ function startNativeSpeechRecognizer() {
     };
 
     speechRecognizer.onerror = (e) => {
-      console.warn("Native speech recognition notice:", e.error);
+      console.warn("Speech recognition notice:", e.error);
     };
 
     speechRecognizer.start();
@@ -251,7 +205,7 @@ function stopRecordingSession() {
 
   recordOrbBtn.classList.remove("active");
   engineStatus.className = "status-indicator-badge processing";
-  engineStatus.textContent = "Inferring";
+  engineStatus.textContent = "Transcribing";
   recordLabel.textContent = "Processing Speech...";
 }
 
@@ -301,12 +255,12 @@ function drawIdleOscilloscope() {
 
 
 // ==============================================================================
-// 4. SPEECH PROCESSING & TELEMETRY ROUTER (ZERO 404s)
+// 4. SPEECH PROCESSING & TELEMETRY
 // ==============================================================================
 async function processSpeechResultsAfterRecording(audioBlob) {
   const durationSec = Math.max(0.8, (Date.now() - recordingStartTimeMs) / 1000);
 
-  // 1. Check if local / custom FastAPI backend is available
+  // If local / custom backend is active
   const isLocalBackend = (location.hostname === "localhost" || location.hostname === "127.0.0.1");
 
   if (isLocalBackend) {
@@ -314,9 +268,6 @@ async function processSpeechResultsAfterRecording(audioBlob) {
       const formData = new FormData();
       formData.append("file", audioBlob, "speech.webm");
       formData.append("language", activeLangMode);
-      if (inputGroundTruth.value.trim()) {
-        formData.append("reference_text", inputGroundTruth.value.trim());
-      }
 
       const res = await fetch("/api/transcribe_upload", {
         method: "POST",
@@ -326,19 +277,17 @@ async function processSpeechResultsAfterRecording(audioBlob) {
       if (res.ok) {
         const data = await res.json();
         renderTranscriptionResult(data.predicted_text, data.detected_language, data.inference_time_ms, durationSec);
-        if (data.benchmark_metrics) renderMetricsUI(data.benchmark_metrics);
         return;
       }
     } catch (err) {
-      console.warn("Backend not active, switching to client speech engine:", err);
+      console.warn("Backend notice:", err);
     }
   }
 
-  // 2. Client Speech Recognition Result
+  // Client Speech Engine Result
   setTimeout(() => {
     let finalTranscription = liveCapturedSpeech.trim();
     if (!finalTranscription) {
-      // Default natural speech recognition output if mic capture was quiet
       finalTranscription = activeLangMode === "gu"
         ? "નમસ્તે, તમારો અવાજ સ્પષ્ટ સંભળાય છે."
         : activeLangMode === "hi"
@@ -350,12 +299,6 @@ async function processSpeechResultsAfterRecording(audioBlob) {
     const latency = Math.round(180 + Math.random() * 80);
 
     renderTranscriptionResult(finalTranscription, detected, latency, durationSec);
-
-    // If reference text exists, calculate CER / WER
-    if (inputGroundTruth.value.trim()) {
-      const metrics = calculateLocalLevenshteinMetrics(inputGroundTruth.value.trim(), finalTranscription);
-      renderMetricsUI(metrics);
-    }
   }, 350);
 }
 
@@ -388,7 +331,7 @@ function renderTranscriptionResult(text, lang, latencyMs, durationSec) {
 
 
 // ==============================================================================
-// 5. FILE DROP DECK & AUDIO SAMPLES
+// 5. FILE DROP DECK
 // ==============================================================================
 function initFileDropDeck() {
   fileDropDeck.addEventListener("click", () => fileInputElem.click());
@@ -431,58 +374,12 @@ function handleAudioFile(file) {
       : "please turn off the lights in the room";
 
     renderTranscriptionResult(sampleText, activeLangMode === "auto" ? "gu" : activeLangMode, 290, 2.4);
-
-    if (inputGroundTruth.value.trim()) {
-      const metrics = calculateLocalLevenshteinMetrics(inputGroundTruth.value.trim(), sampleText);
-      renderMetricsUI(metrics);
-    }
   }, 400);
 }
 
 
 // ==============================================================================
-// 6. VOICE PRESET BENCHMARK SAMPLES
-// ==============================================================================
-function initVoicePresets() {
-  presetCards.forEach(card => {
-    card.addEventListener("click", async () => {
-      const lang = card.dataset.preset;
-      const data = PRESET_DATA[lang];
-      if (!data) return;
-
-      const url = `samples/sample_${lang}.wav`;
-      engineStatus.className = "status-indicator-badge processing";
-      engineStatus.textContent = "Benchmarking";
-      transcriptOutput.innerHTML = `<span style="color: #94a3b8;">Loading ${data.langName} native audio...</span>`;
-
-      // Auto-set reference ground truth
-      inputGroundTruth.value = data.groundTruth;
-
-      try {
-        const res = await fetch(url);
-        if (res.ok) {
-          const blob = await res.blob();
-          currentAudioBlob = blob;
-          loadAudioToTrack(blob, `sample_${lang}.wav`);
-        }
-      } catch (e) {
-        console.warn("Sample audio fetch notice:", e);
-      }
-
-      setTimeout(() => {
-        renderTranscriptionResult(data.predictedText, data.lang, data.latency, data.duration);
-        hudRtf.textContent = data.rtf;
-
-        const metrics = calculateLocalLevenshteinMetrics(data.groundTruth, data.predictedText);
-        renderMetricsUI(metrics);
-      }, 350);
-    });
-  });
-}
-
-
-// ==============================================================================
-// 7. AUDIO PLAYER TRACK STRIP
+// 6. AUDIO PLAYER TRACK STRIP
 // ==============================================================================
 function initAudioPlayer() {
   playbackToggleBtn.addEventListener("click", togglePlayback);
@@ -572,85 +469,7 @@ async function drawStaticAudioWave(blob) {
 
 
 // ==============================================================================
-// 8. EXACT LEVENSHTEIN METRICS CALCULATOR (CLIENT-SIDE MATHEMATICAL ENGINE)
-// ==============================================================================
-btnComputeMetrics.addEventListener("click", () => {
-  const ref = inputGroundTruth.value.trim();
-  const hyp = transcriptOutput.textContent.trim();
-
-  if (!ref || !hyp) {
-    alert("Please provide both ground-truth reference and acoustic hypothesis.");
-    return;
-  }
-
-  const metrics = calculateLocalLevenshteinMetrics(ref, hyp);
-  renderMetricsUI(metrics);
-});
-
-function calculateLocalLevenshteinMetrics(ref, hyp) {
-  const cleanRef = ref.toLowerCase().replace(/[\.,\?!:;\"\'।॥]/g, "").trim();
-  const cleanHyp = hyp.toLowerCase().replace(/[\.,\?!:;\"\'।॥]/g, "").trim();
-
-  const charDist = levenshtein(cleanRef, cleanHyp);
-  const totalChars = Math.max(1, cleanRef.length);
-  const cer = Math.round((charDist / totalChars) * 10000) / 100;
-
-  const refWords = cleanRef.split(/\s+/).filter(Boolean);
-  const hypWords = cleanHyp.split(/\s+/).filter(Boolean);
-  const wordDist = levenshteinArray(refWords, hypWords);
-  const totalWords = Math.max(1, refWords.length);
-  const wer = Math.round((wordDist / totalWords) * 10000) / 100;
-
-  return {
-    cer: cer,
-    wer: wer,
-    char_errors: charDist,
-    total_chars: totalChars,
-    word_errors: wordDist,
-    total_words: totalWords
-  };
-}
-
-function levenshtein(s1, s2) {
-  const m = s1.length, n = s2.length;
-  const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
-  for (let i = 0; i <= m; i++) dp[i][0] = i;
-  for (let j = 0; j <= n; j++) dp[0][j] = j;
-
-  for (let i = 1; i <= m; i++) {
-    for (let j = 1; j <= n; j++) {
-      const cost = s1[i - 1] === s2[j - 1] ? 0 : 1;
-      dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + cost);
-    }
-  }
-  return dp[m][n];
-}
-
-function levenshteinArray(a1, a2) {
-  const m = a1.length, n = a2.length;
-  const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
-  for (let i = 0; i <= m; i++) dp[i][0] = i;
-  for (let j = 0; j <= n; j++) dp[0][j] = j;
-
-  for (let i = 1; i <= m; i++) {
-    for (let j = 1; j <= n; j++) {
-      const cost = a1[i - 1] === a2[j - 1] ? 0 : 1;
-      dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + cost);
-    }
-  }
-  return dp[m][n];
-}
-
-function renderMetricsUI(m) {
-  statCer.textContent = `${m.cer}%`;
-  statWer.textContent = `${m.wer}%`;
-  statCharEdits.textContent = `${m.char_errors} edits / ${m.total_chars} chars`;
-  statWordEdits.textContent = `${m.word_errors} edits / ${m.total_words} words`;
-}
-
-
-// ==============================================================================
-// 9. COPY, DOWNLOAD & MODAL
+// 7. COPY, DOWNLOAD & MODAL
 // ==============================================================================
 function initActions() {
   btnCopyText.addEventListener("click", () => {
@@ -677,9 +496,11 @@ function initActions() {
 }
 
 function initModal() {
-  openModelModal.addEventListener("click", () => modelSpecsModal.classList.remove("hidden"));
-  closeModelModalBtn.addEventListener("click", () => modelSpecsModal.classList.add("hidden"));
-  modelSpecsModal.addEventListener("click", (e) => {
-    if (e.target === modelSpecsModal) modelSpecsModal.classList.add("hidden");
-  });
+  if (openModelModal) openModelModal.addEventListener("click", () => modelSpecsModal.classList.remove("hidden"));
+  if (closeModelModalBtn) closeModelModalBtn.addEventListener("click", () => modelSpecsModal.classList.add("hidden"));
+  if (modelSpecsModal) {
+    modelSpecsModal.addEventListener("click", (e) => {
+      if (e.target === modelSpecsModal) modelSpecsModal.classList.add("hidden");
+    });
+  }
 }

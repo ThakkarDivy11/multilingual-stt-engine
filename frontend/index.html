@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vani AI • Multilingual Speech Intelligence Studio (Gujarati • Hindi • English)</title>
+  <title>Vani AI • Voice-to-Text Studio (Gujarati • Hindi • English)</title>
   
   <!-- Modern Typography & Indic Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,7 +18,6 @@
   <div class="mesh-backdrop">
     <div class="mesh-orb orb-purple"></div>
     <div class="mesh-orb orb-cyan"></div>
-    <div class="mesh-orb orb-rose"></div>
   </div>
 
   <!-- Studio Header -->
@@ -34,18 +33,17 @@
         <div class="brand-text">
           <div class="brand-header-row">
             <span class="brand-name">VANI <span class="gradient-text">STUDIO</span></span>
-            <span class="badge-pro">AI Speech Engine</span>
+            <span class="badge-pro">Voice AI</span>
           </div>
-          <p class="brand-sub">Trilingual Speech-to-Text • Gujarati • हिन्दी • English</p>
+          <p class="brand-sub">Real-Time Speech-to-Text • Gujarati • हिन्दी • English</p>
         </div>
       </div>
 
       <div class="nav-controls">
-        <button id="openModelModal" class="btn-chip" title="View Model Architecture & Specs">
+        <div class="btn-chip" id="openModelModal" title="Model: divy318/multilingual-stt-model">
           <span class="pulse-dot"></span>
           <span class="chip-text">Model: <strong id="chipModelName">divy318/multilingual-stt-model</strong></span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        </button>
+        </div>
       </div>
     </div>
   </header>
@@ -53,11 +51,11 @@
   <!-- Studio Main Workstation -->
   <main class="workstation-container">
     
-    <!-- Top Bar: Segmented Language Control -->
+    <!-- Language Selector Segmented Control -->
     <section class="language-bar-card">
       <div class="lang-bar-header">
         <span class="caps-label">Language Mode</span>
-        <span class="lang-hint">Acoustic Script Routing</span>
+        <span class="lang-hint">Select or Auto-Detect</span>
       </div>
       <div class="segmented-control">
         <button class="seg-btn active" data-lang="auto">
@@ -79,90 +77,56 @@
       </div>
     </section>
 
-    <!-- Workstation Grid -->
+    <!-- Workstation Grid: ONLY Voice Input & Transcription Output -->
     <div class="workstation-grid">
       
-      <!-- Panel 1: Soundstage & Audio Capture -->
+      <!-- Panel 1: Voice Input (Soundstage & Recording) -->
       <section class="glass-panel soundstage-panel">
         <div class="panel-header">
           <div class="panel-title-wrap">
             <div class="panel-icon-box">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
             </div>
-            <h3>Audio Soundstage</h3>
+            <h3>Voice Input</h3>
           </div>
           <div class="status-indicator-badge" id="engineStatus">Ready</div>
         </div>
 
-        <!-- Central Microphone Orb & Visualizer -->
+        <!-- Central Voice Arena with Live Audio Visualizer -->
         <div class="soundstage-arena">
           <canvas id="audioVisualizerCanvas" class="visualizer-canvas" width="600" height="120"></canvas>
           
           <div class="mic-orb-wrapper">
-            <button id="recordOrbBtn" class="record-orb" title="Click to start live speech capture">
+            <button id="recordOrbBtn" class="record-orb" title="Click to start speaking">
               <div class="orb-inner">
-                <svg id="recordIcon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <svg id="recordIcon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                   <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
                   <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
                   <line x1="12" y1="19" x2="12" y2="23"/>
                   <line x1="8" y1="23" x2="16" y2="23"/>
                 </svg>
               </div>
-              <div class="orb-glow-ring"></div>
             </button>
-            <div class="mic-live-label" id="recordLabel">Tap to Speak</div>
+            <div class="mic-live-label" id="recordLabel">Tap Microphone to Speak</div>
             <div class="recording-clock" id="recordClock">00:00</div>
           </div>
         </div>
 
-        <!-- File Upload Drag Deck -->
+        <!-- Optional Audio File Drop Area -->
         <div class="drop-deck" id="fileDropDeck">
           <input type="file" id="fileInputElem" accept=".wav,.mp3,.ogg,.webm,.flac,.m4a" hidden>
           <div class="deck-content">
             <div class="deck-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
             </div>
             <div>
-              <p class="deck-main-text">Drop speech recording or <span class="highlight-link">Browse Files</span></p>
-              <span class="deck-sub-text">WAV, MP3, OGG, WEBM, FLAC • 16 kHz Auto-Resampling</span>
+              <p class="deck-main-text">Or drop an audio file here (<span class="highlight-link">Browse</span>)</p>
+              <span class="deck-sub-text">WAV, MP3, WEBM, FLAC, M4A</span>
             </div>
           </div>
         </div>
 
-        <!-- Voice Palette Presets -->
-        <div class="presets-section">
-          <div class="presets-label-row">
-            <span class="caps-label">Acoustic Benchmarking Samples</span>
-          </div>
-          <div class="preset-cards-grid">
-            <div class="preset-card" data-preset="gu">
-              <div class="preset-badge gu">GU</div>
-              <div class="preset-info">
-                <strong>Gujarati Native</strong>
-                <span>તેવીસમી તારીખે મારા...</span>
-              </div>
-              <button class="preset-play-btn" title="Load sample">▶</button>
-            </div>
-            <div class="preset-card" data-preset="hi">
-              <div class="preset-badge hi">HI</div>
-              <div class="preset-info">
-                <strong>Hindi Native</strong>
-                <span>घर जाने का रास्ता दिखाओ...</span>
-              </div>
-              <button class="preset-play-btn" title="Load sample">▶</button>
-            </div>
-            <div class="preset-card" data-preset="en">
-              <div class="preset-badge en">EN</div>
-              <div class="preset-info">
-                <strong>English Native</strong>
-                <span>please turn off the lights...</span>
-              </div>
-              <button class="preset-play-btn" title="Load sample">▶</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Mini Audio Player Track -->
+        <!-- Audio Player Strip (Plays Recorded Audio) -->
         <div class="audio-track-strip" id="audioPlayerStrip">
           <button id="playbackToggleBtn" class="track-btn">▶</button>
           <div class="track-timeline" id="timelineBar">
@@ -173,21 +137,21 @@
 
       </section>
 
-      <!-- Panel 2: Live Transcription & Telemetry Canvas -->
+      <!-- Panel 2: Voice Output (Transcription Canvas) -->
       <section class="glass-panel transcription-panel">
         <div class="panel-header">
           <div class="panel-title-wrap">
             <div class="panel-icon-box">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
             </div>
-            <h3>Acoustic Transcription Canvas</h3>
+            <h3>Speech Output</h3>
           </div>
           <div class="header-action-group">
             <button id="btnCopyText" class="glass-btn" title="Copy transcript to clipboard">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
               <span>Copy</span>
             </button>
-            <button id="btnDownloadText" class="glass-btn" title="Download text transcript">
+            <button id="btnDownloadText" class="glass-btn" title="Download as text file">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               <span>Save TXT</span>
             </button>
@@ -196,15 +160,15 @@
 
         <!-- Output Canvas Box -->
         <div class="canvas-transcript-box">
-          <div class="transcript-display" id="transcriptOutput" contenteditable="true" spellcheck="false">
-            Speak into the microphone or load an audio sample to transcribe speech in real time...
+          <div class="transcript-display" id="transcriptOutput" contenteditable="true" spellcheck="false" placeholder="Your speech will appear here...">
+            Click the microphone and speak in Gujarati, Hindi, or English...
           </div>
         </div>
 
         <!-- Telemetry HUD Bar -->
         <div class="telemetry-hud-grid">
           <div class="hud-item">
-            <span class="hud-label">Detected Script</span>
+            <span class="hud-label">Spoken Language</span>
             <span class="hud-value" id="hudLang">—</span>
           </div>
           <div class="hud-item">
@@ -212,46 +176,12 @@
             <span class="hud-value" id="hudLatency">—</span>
           </div>
           <div class="hud-item">
-            <span class="hud-label">Real-Time Factor</span>
-            <span class="hud-value" id="hudRtf">—</span>
+            <span class="hud-label">Speed</span>
+            <span class="hud-value" id="hudRtf">Real-Time</span>
           </div>
           <div class="hud-item">
-            <span class="hud-label">Audio Duration</span>
+            <span class="hud-label">Duration</span>
             <span class="hud-value" id="hudDuration">—</span>
-          </div>
-        </div>
-
-        <!-- Exact Levenshtein Accuracy Suite -->
-        <div class="accuracy-suite-card">
-          <div class="suite-header">
-            <div class="suite-title">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-              <span>Exact Levenshtein Benchmark Verification</span>
-            </div>
-            <span class="suite-pill">Zero Guesses</span>
-          </div>
-
-          <div class="reference-input-row">
-            <input type="text" id="inputGroundTruth" class="glass-input" placeholder="Enter ground-truth reference sentence to evaluate exact CER & WER...">
-            <button id="btnComputeMetrics" class="btn-action">Verify Accuracy</button>
-          </div>
-
-          <div class="metrics-cards-row">
-            <div class="stat-card">
-              <span class="stat-title">Character Error Rate</span>
-              <span class="stat-val highlight" id="statCer">—</span>
-              <span class="stat-sub" id="statCharEdits">0 edits / 0 chars</span>
-            </div>
-            <div class="stat-card">
-              <span class="stat-title">Word Error Rate</span>
-              <span class="stat-val" id="statWer">—</span>
-              <span class="stat-sub" id="statWordEdits">0 edits / 0 words</span>
-            </div>
-            <div class="stat-card">
-              <span class="stat-title">Acoustic Head</span>
-              <span class="stat-val small">MMS-300M</span>
-              <span class="stat-sub">250 Unified Tokens</span>
-            </div>
           </div>
         </div>
 
@@ -271,7 +201,7 @@
             <div class="wave-bar bar-2"></div>
             <div class="wave-bar bar-3"></div>
           </div>
-          <h4>Model Specifications & Architecture</h4>
+          <h4>Model Specifications</h4>
         </div>
         <button id="closeModelModalBtn" class="btn-close">&times;</button>
       </div>
@@ -285,28 +215,16 @@
           <span class="tile-val">Meta MMS-300M (Wav2Vec2 24-Layer Transformer)</span>
         </div>
         <div class="spec-tile">
-          <span class="tile-label">Total Parameters</span>
+          <span class="tile-label">Parameters</span>
           <span class="tile-val">315,694,970 parameters</span>
         </div>
         <div class="spec-tile">
-          <span class="tile-label">Supported Languages</span>
+          <span class="tile-label">Languages</span>
           <span class="tile-val">Gujarati (gu), Hindi (hi), English (en)</span>
         </div>
         <div class="spec-tile">
           <span class="tile-label">Vocabulary Tokenizer</span>
-          <span class="tile-val">250 Unified Phonetic Tokens (Zero Cross-Script Collision)</span>
-        </div>
-        <div class="spec-tile">
-          <span class="tile-label">Corpus Duration</span>
-          <span class="tile-val">41.77 Hours (19,823 Verified Utterances)</span>
-        </div>
-        <div class="spec-tile">
-          <span class="tile-label">Record Raw CER</span>
-          <span class="tile-val accent">10.30% Raw CER</span>
-        </div>
-        <div class="spec-tile">
-          <span class="tile-label">Real-Time Factor</span>
-          <span class="tile-val">~0.14x (7x faster than real-time on CPU)</span>
+          <span class="tile-val">250 Unified Phonetic Tokens</span>
         </div>
       </div>
     </div>

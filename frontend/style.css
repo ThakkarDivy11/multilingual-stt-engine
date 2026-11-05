@@ -590,17 +590,17 @@ body {
 
 .canvas-transcript-box {
   flex: 1;
-  min-height: 220px;
+  min-height: 280px;
   background: var(--bg-inner);
   border: 1px solid var(--border-glass);
   border-radius: 16px;
-  padding: 20px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
 }
 .transcript-display {
-  font-size: 1.05rem;
-  line-height: 1.8;
+  font-size: 1.15rem;
+  line-height: 1.9;
   color: var(--text-primary);
   outline: none;
   flex: 1;
