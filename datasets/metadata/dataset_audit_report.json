@@ -1,0 +1,110 @@
+{
+  "master_corpus": {
+    "split": "Master Corpus",
+    "total_samples": 19823,
+    "total_hours": 41.77,
+    "unique_speakers": 1507,
+    "missing_transcripts": 0,
+    "language_distribution": {
+      "gu": {
+        "samples": 8122,
+        "duration_hours": 16.9,
+        "percentage_of_corpus": 41.0,
+        "speakers": 41
+      },
+      "hi": {
+        "samples": 5947,
+        "duration_hours": 11.32,
+        "percentage_of_corpus": 30.0,
+        "speakers": 25
+      },
+      "en": {
+        "samples": 5754,
+        "duration_hours": 13.55,
+        "percentage_of_corpus": 29.0,
+        "speakers": 1449
+      }
+    }
+  },
+  "train_split": {
+    "split": "Train Split (80%)",
+    "total_samples": 15861,
+    "total_hours": 33.41,
+    "unique_speakers": 1304,
+    "missing_transcripts": 0,
+    "language_distribution": {
+      "gu": {
+        "samples": 6498,
+        "duration_hours": 13.53,
+        "percentage_of_corpus": 41.0,
+        "speakers": 41
+      },
+      "hi": {
+        "samples": 4759,
+        "duration_hours": 9.06,
+        "percentage_of_corpus": 30.0,
+        "speakers": 25
+      },
+      "en": {
+        "samples": 4604,
+        "duration_hours": 10.82,
+        "percentage_of_corpus": 29.0,
+        "speakers": 1246
+      }
+    }
+  },
+  "val_split": {
+    "split": "Validation Split (10%)",
+    "total_samples": 1981,
+    "total_hours": 4.17,
+    "unique_speakers": 245,
+    "missing_transcripts": 0,
+    "language_distribution": {
+      "gu": {
+        "samples": 812,
+        "duration_hours": 1.66,
+        "percentage_of_corpus": 41.0,
+        "speakers": 41
+      },
+      "hi": {
+        "samples": 594,
+        "duration_hours": 1.15,
+        "percentage_of_corpus": 30.0,
+        "speakers": 25
+      },
+      "en": {
+        "samples": 575,
+        "duration_hours": 1.36,
+        "percentage_of_corpus": 29.0,
+        "speakers": 187
+      }
+    }
+  },
+  "test_split": {
+    "split": "Independent Test Split (10%)",
+    "total_samples": 1981,
+    "total_hours": 4.2,
+    "unique_speakers": 284,
+    "missing_transcripts": 0,
+    "language_distribution": {
+      "gu": {
+        "samples": 812,
+        "duration_hours": 1.71,
+        "percentage_of_corpus": 41.0,
+        "speakers": 41
+      },
+      "hi": {
+        "samples": 594,
+        "duration_hours": 1.11,
+        "percentage_of_corpus": 30.0,
+        "speakers": 25
+      },
+      "en": {
+        "samples": 575,
+        "duration_hours": 1.38,
+        "percentage_of_corpus": 29.0,
+        "speakers": 226
+      }
+    }
+  }
+}

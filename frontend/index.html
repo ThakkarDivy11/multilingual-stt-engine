@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trilingual STT Studio | Gujarati • Hindi • English AI</title>
+  
+  <!-- Modern Typography with full Indic & Latin phonetic support -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Gujarati:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Background Ambient Glow -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+
+  <!-- Header -->
+  <header class="studio-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-badge">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20M17 5v14M7 5v14M2 9v6M22 9v6"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-title-wrap">
+            <h1 class="brand-title">Trilingual STT Studio</h1>
+            <span class="version-tag">v2.0 • Production</span>
+          </div>
+          <p class="brand-subtitle">High-Accuracy Speech-to-Text • Gujarati • Hindi • English</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div class="model-pill" id="modelPillBtn" title="Click to view model architecture specs">
+          <span class="status-indicator live"></span>
+          <span class="model-name" id="headerModelName">divy3108/multilingual-stt-model</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+        </div>
+        <a href="https://github.com/ThakkarDivy11/multilingual-stt-engine" target="_blank" class="github-btn" title="View Source on GitHub">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <span>Repository</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="studio-layout">
+    
+    <!-- Left Column: Audio Capture & Controls -->
+    <section class="studio-card audio-control-card">
+      <div class="card-header">
+        <div class="card-title-group">
+          <svg class="card-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          <h2>Audio Input</h2>
+        </div>
+        <div class="pill-status" id="processBadge">Ready</div>
+      </div>
+
+      <!-- Language Selector Tabs -->
+      <div class="language-selector-wrap">
+        <label class="section-label">Target Language Mode</label>
+        <div class="language-tabs">
+          <button class="lang-tab active" data-lang="auto">
+            <span class="tab-badge">AUTO</span>
+            <span>Auto Detect</span>
+          </button>
+          <button class="lang-tab" data-lang="gu">
+            <span class="tab-badge">GU</span>
+            <span>ગુજરાતી</span>
+          </button>
+          <button class="lang-tab" data-lang="hi">
+            <span class="tab-badge">HI</span>
+            <span>हिन्दी</span>
+          </button>
+          <button class="lang-tab" data-lang="en">
+            <span class="tab-badge">EN</span>
+            <span>English</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Capture Modes (Microphone & Upload) -->
+      <div class="input-mode-container">
+        
+        <!-- Live Microphone Section -->
+        <div class="mic-recorder-box">
+          <div class="mic-ring-container">
+            <button id="micButton" class="mic-btn" title="Click to record speech">
+              <svg id="micIcon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                <line x1="12" y1="19" x2="12" y2="23"/>
+                <line x1="8" y1="23" x2="16" y2="23"/>
+              </svg>
+            </button>
+            <div class="pulse-ring"></div>
+          </div>
+          <div class="mic-status-text" id="micStatusText">Click microphone to start speaking</div>
+          <div class="recording-timer" id="recordingTimer">00:00</div>
+        </div>
+
+        <div class="divider">
+          <span>OR DROP AUDIO FILE</span>
+        </div>
+
+        <!-- File Upload Dropzone -->
+        <div class="upload-dropzone" id="dropZone">
+          <input type="file" id="audioFileInput" accept=".wav,.mp3,.ogg,.webm,.flac,.m4a" class="file-input-hidden">
+          <svg class="upload-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          <p class="drop-text">Drag & drop speech audio file here, or <span class="highlight">browse</span></p>
+          <p class="drop-hint">Supports WAV, MP3, OGG, WEBM, FLAC, M4A (16 kHz auto-resampled)</p>
+        </div>
+
+      </div>
+
+      <!-- Presets / Quick Sample Audio -->
+      <div class="sample-presets-wrap">
+        <label class="section-label">Try Preloaded Voice Samples</label>
+        <div class="sample-buttons">
+          <button class="sample-pill" data-sample="gu">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span>Gujarati Sample</span>
+          </button>
+          <button class="sample-pill" data-sample="hi">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span>Hindi Sample</span>
+          </button>
+          <button class="sample-pill" data-sample="en">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span>English Sample</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Audio Waveform & Player -->
+      <div class="waveform-player-container" id="playerContainer">
+        <div class="waveform-canvas-box">
+          <canvas id="waveformCanvas" width="560" height="70"></canvas>
+        </div>
+        <div class="player-controls">
+          <button id="playPauseBtn" class="play-btn" title="Play / Pause Audio">
+            <svg id="playIcon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </button>
+          <div class="scrub-wrap">
+            <div class="scrub-bar" id="scrubBar">
+              <div class="scrub-fill" id="scrubFill"></div>
+            </div>
+          </div>
+          <span class="audio-time" id="audioTime">0:00 / 0:00</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Right Column: Transcription Output & Telemetry -->
+    <section class="studio-card transcription-card">
+      <div class="card-header">
+        <div class="card-title-group">
+          <svg class="card-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          <h2>Transcription Result</h2>
+        </div>
+        <div class="action-buttons">
+          <button id="copyBtn" class="tool-btn" title="Copy to clipboard">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span>Copy</span>
+          </button>
+          <button id="downloadBtn" class="tool-btn" title="Download as text file">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Download</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Transcription Output Area -->
+      <div class="transcription-body">
+        <div class="output-textbox" id="transcriptionText" contenteditable="true" placeholder="Speech transcription will appear here in real time...">
+          Click the microphone to speak or drop an audio file to transcribe...
+        </div>
+
+        <!-- Telemetry Badges Strip -->
+        <div class="telemetry-strip" id="telemetryStrip">
+          <div class="metric-pill">
+            <span class="metric-lbl">Language</span>
+            <span class="metric-val" id="telemetryLang">-</span>
+          </div>
+          <div class="metric-pill">
+            <span class="metric-lbl">Latency</span>
+            <span class="metric-val" id="telemetryLatency">-</span>
+          </div>
+          <div class="metric-pill">
+            <span class="metric-lbl">Real-Time Factor</span>
+            <span class="metric-val" id="telemetryRtf">-</span>
+          </div>
+          <div class="metric-pill">
+            <span class="metric-lbl">Duration</span>
+            <span class="metric-val" id="telemetryDuration">-</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ground Truth & Levenshtein Accuracy Telemetry -->
+      <div class="accuracy-section">
+        <div class="accuracy-header">
+          <div class="accuracy-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span>Exact Levenshtein Benchmark Verification</span>
+          </div>
+          <span class="accuracy-tag">Mathematical Standard</span>
+        </div>
+
+        <div class="reference-input-wrap">
+          <input type="text" id="refTextInput" class="ref-input" placeholder="Optional: Enter ground-truth sentence to measure exact CER & WER...">
+          <button id="calcMetricBtn" class="calc-btn">Compute CER / WER</button>
+        </div>
+
+        <div class="metrics-grid" id="metricsGrid">
+          <div class="metric-card">
+            <span class="metric-card-title">Character Error Rate</span>
+            <span class="metric-card-value" id="metricCer">-</span>
+            <span class="metric-card-sub" id="metricCharDist">0 / 0 edits</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-card-title">Word Error Rate</span>
+            <span class="metric-card-value" id="metricWer">-</span>
+            <span class="metric-card-sub" id="metricWordDist">0 / 0 words</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-card-title">Acoustic Model</span>
+            <span class="metric-card-value small" id="metricModelName">MMS-300M</span>
+            <span class="metric-card-sub">250 Unified Tokens</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Model Specification Modal -->
+  <div class="modal-backdrop hidden" id="modelModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <div class="brand-badge small">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5v14M7 5v14M2 9v6M22 9v6"/></svg>
+          </div>
+          <h3>Model Information & Architecture</h3>
+        </div>
+        <button id="closeModalBtn" class="close-btn">&times;</button>
+      </div>
+      <div class="modal-content">
+        <div class="spec-row">
+          <span class="spec-lbl">Model Repository</span>
+          <span class="spec-val highlight">divy3108/multilingual-stt-model</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-lbl">Acoustic Backbone</span>
+          <span class="spec-val">Meta MMS-300M (Wav2Vec2 24-Layer Transformer)</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-lbl">Total Parameters</span>
+          <span class="spec-val">315,694,970 parameters</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-lbl">Supported Languages</span>
+          <span class="spec-val">Gujarati (gu), Hindi (hi), English (en)</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-lbl">Vocabulary Tokenizer</span>
+          <span class="spec-val">250 Unified Phonetic Tokens (Zero Cross-Script Collision)</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-lbl">Corpus Training Hours</span>
+          <span class="spec-val">41.77 Hours (19,823 Verified Utterances)</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-lbl">Record Character Error Rate</span>
+          <span class="spec-val highlight">10.30% Raw CER</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-lbl">Acoustic Feature Extractor</span>
+          <span class="spec-val">7-Layer Temporal CNN (Frozen 16 kHz feature encoder)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

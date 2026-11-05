@@ -1,0 +1,20 @@
+# Core Deep Learning & Speech Frameworks
+torch>=2.0.0
+torchaudio>=2.0.0
+transformers>=4.36.0
+onnxruntime>=1.16.0
+
+# Audio I/O & Preprocessing
+soundfile>=0.12.1
+numpy>=1.24.0
+
+# Inference Server & API Architecture
+fastapi>=0.100.0
+uvicorn[standard]>=0.23.0
+python-multipart>=0.0.6
+pydantic>=2.0.0
+requests>=2.31.0
+
+# Model Hub & Metrics Telemetry
+huggingface_hub>=0.20.0
+jiwer>=3.0.0

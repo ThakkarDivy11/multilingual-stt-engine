@@ -1,0 +1,35 @@
+# Virtual Environment
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyTorch & Model Checkpoints
+*.pt
+*.bin
+checkpoints/
+!checkpoints/.gitkeep
+temp_uploads/
+*.safetensors
+*.arpa
+
+# OS & IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Logs & Cache
+*.log
+.cache/
+.pytest_cache/
+
+# Dataset Audio Files (keep CSV manifests only)
+datasets/audio/
+*.wav
+*.mp3
+*.flac
+*.webm

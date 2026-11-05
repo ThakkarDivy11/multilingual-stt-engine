@@ -1,0 +1,92 @@
+{
+  "timestamp": "2026-11-06 00:19:49",
+  "model_architecture": "Wav2Vec2ForCTC (Meta MMS-300M Backbone)",
+  "parameters": 315694970,
+  "model_file_size_mb": 1204.33,
+  "kenlm_lm_size_mb": 85.88,
+  "clean_audio": {
+    "average_cer": 18.92,
+    "average_wer": 95.28,
+    "average_latency_ms": 338.2,
+    "average_rtf": 0.153,
+    "per_sample": [
+      {
+        "id": "sample_en_01",
+        "language": "en",
+        "duration_sec": 1.89,
+        "reference": "please turn off the lights in the room",
+        "prediction": "please teurn of the lits in the rom",
+        "detected_lang": "en",
+        "cer": 13.16,
+        "wer": 62.5,
+        "latency_ms": 339.8,
+        "rtf": 0.18
+      },
+      {
+        "id": "sample_hi_01",
+        "language": "hi",
+        "duration_sec": 1.8,
+        "reference": "घर जाने का रास्ता दिखाओ",
+        "prediction": "घર झाnन रास्ता दिखाओ",
+        "detected_lang": "hi",
+        "cer": 30.43,
+        "wer": 140.0,
+        "latency_ms": 246.7,
+        "rtf": 0.137
+      },
+      {
+        "id": "sample_gu_01",
+        "language": "gu",
+        "duration_sec": 3.0,
+        "reference": "તેવીસમી તારીખે મારા કેલેન્ડરમાં શું છે",
+        "prediction": "b્રેવીસમી તારીખે મારા કેલેnડરમાં શું છે",
+        "detected_lang": "gu",
+        "cer": 13.16,
+        "wer": 83.33,
+        "latency_ms": 428.2,
+        "rtf": 0.143
+      }
+    ]
+  },
+  "noisy_audio_snr15db": {
+    "average_cer": 62.01,
+    "average_wer": 312.22,
+    "per_sample": [
+      {
+        "id": "sample_en_01",
+        "language": "en",
+        "cer": 52.63,
+        "wer": 250.0,
+        "prediction": "peas turn f yo lifesindb"
+      },
+      {
+        "id": "sample_hi_01",
+        "language": "hi",
+        "cer": 91.3,
+        "wer": 420.0,
+        "prediction": "મlrrન raste ઉlછ"
+      },
+      {
+        "id": "sample_gu_01",
+        "language": "gu",
+        "cer": 42.11,
+        "wer": 266.67,
+        "prediction": "પ્રેવીs ની તાયી કે મારા kેલyndeરમા સું છે"
+      }
+    ]
+  },
+  "language_summary": {
+    "gujarati": {
+      "clean_cer": 13.16,
+      "noisy_cer": 42.11
+    },
+    "hindi": {
+      "clean_cer": 30.43,
+      "noisy_cer": 91.3
+    },
+    "english": {
+      "clean_cer": 13.16,
+      "noisy_cer": 52.63
+    }
+  }
+}
