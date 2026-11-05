@@ -1,5 +1,5 @@
 /**
- * VANI AI • Voice-to-Text Studio
+ * DIVY AI • Speech-to-Text Studio
  * Clean, High-Accuracy Voice Input & Speech Output Controller
  * Languages: Gujarati (ગુજરાતી) • Hindi (हिन्दी) • English
  */
