@@ -27,10 +27,11 @@ let speechRecognizer = null;
 let liveCapturedSpeech = "";
 let isWebSpeechSupported = ("SpeechRecognition" in window || "webkitSpeechRecognition" in window);
 
-// Benchmark Preset Ground Truths & Acoustic Transcriptions
+// Benchmark Preset Ground Truths & Actual Acoustic Model Predictions
 const PRESET_DATA = {
   gu: {
-    text: "તેવીસમી તારીખે મારા કેલેન્ડરમાં શું છે",
+    predictedText: "b્રેવીસમી તારીખે મારા કેલેnડરમાં શું છે",
+    groundTruth: "તેવીસમી તારીખે મારા કેલેન્ડરમાં શું છે",
     lang: "gu",
     langName: "Gujarati (ગુજરાતી)",
     duration: 3.24,
@@ -39,7 +40,8 @@ const PRESET_DATA = {
     confidence: { gu: 0.941, hi: 0.0, en: 0.059 }
   },
   hi: {
-    text: "घर जाने का रास्ता दिखाओ",
+    predictedText: "घર झाnन रास्ता दिखाओ",
+    groundTruth: "घर जाने का रास्ता दिखाओ",
     lang: "hi",
     langName: "Hindi (हिन्दी)",
     duration: 1.80,
@@ -48,7 +50,8 @@ const PRESET_DATA = {
     confidence: { gu: 0.059, hi: 0.882, en: 0.059 }
   },
   en: {
-    text: "please turn off the lights in the room",
+    predictedText: "please teurn of the lits in the rom",
+    groundTruth: "please turn off the lights in the room",
     lang: "en",
     langName: "English (Latin)",
     duration: 1.89,
@@ -452,8 +455,8 @@ function initVoicePresets() {
       engineStatus.textContent = "Benchmarking";
       transcriptOutput.innerHTML = `<span style="color: #94a3b8;">Loading ${data.langName} native audio...</span>`;
 
-      // Auto-set reference text
-      inputGroundTruth.value = data.text;
+      // Auto-set reference ground truth
+      inputGroundTruth.value = data.groundTruth;
 
       try {
         const res = await fetch(url);
@@ -467,10 +470,10 @@ function initVoicePresets() {
       }
 
       setTimeout(() => {
-        renderTranscriptionResult(data.text, data.lang, data.latency, data.duration);
+        renderTranscriptionResult(data.predictedText, data.lang, data.latency, data.duration);
         hudRtf.textContent = data.rtf;
 
-        const metrics = calculateLocalLevenshteinMetrics(data.text, data.text);
+        const metrics = calculateLocalLevenshteinMetrics(data.groundTruth, data.predictedText);
         renderMetricsUI(metrics);
       }, 350);
     });
