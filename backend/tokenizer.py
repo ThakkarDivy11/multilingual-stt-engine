@@ -93,3 +93,4 @@ class TrilingualTokenizer:
 
     def __len__(self) -> int:
         return self.vocab_size
+

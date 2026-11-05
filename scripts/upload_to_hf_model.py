@@ -10,7 +10,7 @@ from pathlib import Path
 from huggingface_hub import HfApi, create_repo
 
 CHECKPOINT_DIR = Path(__file__).resolve().parent.parent / "checkpoints" / "best_checkpoint"
-MODEL_REPO_ID = "divy3108/multilingual-stt-model"
+MODEL_REPO_ID = "divy318/multilingual-stt-model"
 
 MODEL_CARD = f"""---
 language:
@@ -119,3 +119,4 @@ if __name__ == "__main__":
         sys.exit(1)
 
     upload_model(args.token)
+

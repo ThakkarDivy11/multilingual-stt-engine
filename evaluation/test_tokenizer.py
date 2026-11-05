@@ -56,3 +56,4 @@ def test_trilingual_tokenizer():
 
 if __name__ == "__main__":
     test_trilingual_tokenizer()
+

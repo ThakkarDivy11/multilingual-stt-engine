@@ -255,3 +255,4 @@ python scripts/deploy_to_hf_space.py --token <YOUR_HF_TOKEN>
 - **Codebase License:** MIT License
 - **Pretrained Weights Backbone:** Meta MMS-300M (CC-BY-NC 4.0 / Meta AI Speech)
 - **Speech Datasets:** Google FLEURS (CC-BY 4.0), OpenSLR 78 (ODbL), AI4Bharat Kathbath (MIT)
+

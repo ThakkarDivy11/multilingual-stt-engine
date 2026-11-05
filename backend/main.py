@@ -172,3 +172,4 @@ if __name__ == "__main__":
 
     print(f"\n🎙️ Starting Trilingual STT Studio on http://{args.host}:{args.port} ...")
     uvicorn.run("backend.main:app", host=args.host, port=args.port, reload=False)
+

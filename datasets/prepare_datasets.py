@@ -156,3 +156,4 @@ def create_stratified_partitions(df_train_raw: pd.DataFrame, df_val_raw: pd.Data
 if __name__ == "__main__":
     df_t, df_v = download_or_load_manifests()
     create_stratified_partitions(df_t, df_v)
+

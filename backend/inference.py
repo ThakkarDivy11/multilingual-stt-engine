@@ -204,3 +204,4 @@ class STTInferenceEngine:
             result["benchmark_metrics"] = compute_accuracy_metrics(reference_text.strip(), predicted_text)
 
         return result
+

@@ -47,3 +47,4 @@ def download_checkpoint():
 
 if __name__ == "__main__":
     download_checkpoint()
+
