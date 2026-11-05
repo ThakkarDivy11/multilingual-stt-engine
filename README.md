@@ -4,8 +4,8 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-green.svg)](https://fastapi.tiangolo.com/)
 [![Transformers](https://img.shields.io/badge/🤗_Transformers-4.36+-yellow.svg)](https://huggingface.co/docs/transformers)
-[![Hugging Face Model](https://img.shields.io/badge/🤗_Model-divy3108%2Fmultilingual--stt--model-purple.svg)](https://huggingface.co/divy3108/multilingual-stt-model)
-[![Hugging Face Space](https://img.shields.io/badge/🤗_Space-divy3108%2Fmultilingual--speech--to--text-red.svg)](https://huggingface.co/spaces/divy3108/multilingual-speech-to-text)
+[![Hugging Face Model](https://img.shields.io/badge/🤗_Model-divy318%2Fmultilingual--stt--model-purple.svg)](https://huggingface.co/divy318/multilingual-stt-model)
+[![Hugging Face Space](https://img.shields.io/badge/🤗_Space-divy318%2Fdivy--speech--to--text-red.svg)](https://huggingface.co/spaces/divy318/divy-speech-to-text)
 
 A production-grade, end-to-end multilingual Automatic Speech Recognition (ASR) studio and inference engine supporting **Gujarati (`gu`)**, **Hindi (`hi`)**, and **English (`en`)** in a unified acoustic space with zero cross-script phonetic token collision.
 
