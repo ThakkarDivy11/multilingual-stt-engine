@@ -74,11 +74,23 @@ document.addEventListener("DOMContentLoaded", () => {
 // 2. LANGUAGE SELECTOR
 // ==============================================================================
 function initLanguageTabs() {
+  const langHint = document.querySelector(".lang-hint");
   segBtns.forEach(btn => {
     btn.addEventListener("click", () => {
       segBtns.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
       activeLangMode = btn.dataset.lang;
+      
+      if (langHint) {
+        if (activeLangMode === "auto") langHint.textContent = "⚡ Auto-Detecting English • Hindi • Gujarati";
+        else if (activeLangMode === "gu") langHint.textContent = "ગુજરાતી મોડ સક્રિય (Gujarati Mode Active)";
+        else if (activeLangMode === "hi") langHint.textContent = "हिन्दी मोड सक्रिय (Hindi Mode Active)";
+        else if (activeLangMode === "en") langHint.textContent = "English Mode Active";
+      }
+      
+      if (isRecordingLive && speechRecognizer) {
+        try { speechRecognizer.stop(); } catch(e){}
+      }
       console.log(`Active speech recognition language mode: ${activeLangMode}`);
     });
   });
@@ -153,6 +165,48 @@ async function startRecordingSession() {
   }
 }
 
+// Phonetic Normalization Patterns (Converts transliterated Indic sounds back to clean English if in Auto or English mode)
+const PHONETIC_PATTERNS = [
+  { p: /હૈલો\s*હાઉ\s*આર\s*યુ|હેલો\s*હાઉ\s*આર\s*યુ|હાવ\s*આર\s*યુ/gi, r: "Hello, how are you." },
+  { p: /ગુડ\s*મોર્નિંગ/gi, r: "Good morning" },
+  { p: /ગુડ\s*આફ્ટરનૂન/gi, r: "Good afternoon" },
+  { p: /ગુડ\s*ઈવનિંગ/gi, r: "Good evening" },
+  { p: /થેંક\s*યુ\s*સો\s*મચ|થેન્ક\s*યુ\s*સો\s*મચ/gi, r: "Thank you so much" },
+  { p: /થેંક\s*યુ|થેન્ક\s*યુ|થેંક્સ/gi, r: "Thank you" },
+  { p: /વોટ\s*ઇઝ\s*યોર\s*નેમ/gi, r: "What is your name" },
+  { p: /માય\s*નેમ\s*ઇઝ/gi, r: "My name is" },
+  { p: /આઈ\s*એમ\s*ફાઇન|આઈ\s*એમ\s*ફાઈન/gi, r: "I am fine" },
+  { p: /ટેસ્ટિંગ\s*વન\s*ટુ\s*થ્રી/gi, r: "Testing 1, 2, 3" },
+  { p: /હૈલો|હેલો/gi, r: "Hello" },
+  { p: /હાઉ\s*આર\s*યુ/gi, r: "how are you" },
+  { p: /વેલકમ/gi, r: "Welcome" },
+  { p: /ઓકે/gi, r: "Okay" },
+
+  { p: /हैलो\s*हाउ\s*आर\s*यू|हेलो\s*हाउ\s*आर\s*यू/gi, r: "Hello, how are you." },
+  { p: /गुड\s*मॉर्निंग/gi, r: "Good morning" },
+  { p: /थैंक\s*यू\s*सो\s*मच/gi, r: "Thank you so much" },
+  { p: /थैंक\s*यू|थैंक्स/gi, r: "Thank you" },
+  { p: /व्हाट\s*इज़\s*योर\s*नेम/gi, r: "What is your name" },
+  { p: /माई\s*नेम\s*इज़/gi, r: "My name is" },
+  { p: /आई\s*एम\s*फाइन/gi, r: "I am fine" },
+  { p: /टेस्टिंग\s*वन\s*टू\s*थ्री/gi, r: "Testing 1, 2, 3" },
+  { p: /हैलो|हेलो/gi, r: "Hello" },
+  { p: /हाउ\s*आर\s*यू/gi, r: "how are you" },
+  { p: /वेलकम/gi, r: "Welcome" },
+  { p: /ओके/gi, r: "Okay" }
+];
+
+function sanitizeAndNormalizeMultilingual(text) {
+  if (!text) return "";
+  let cleaned = text;
+  if (activeLangMode === "auto" || activeLangMode === "en") {
+    for (let item of PHONETIC_PATTERNS) {
+      cleaned = cleaned.replace(item.p, item.r);
+    }
+  }
+  return cleaned;
+}
+
 function startNativeSpeechRecognizer() {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SpeechRecognition) return;
@@ -166,7 +220,7 @@ function startNativeSpeechRecognizer() {
     if (activeLangMode === "gu") speechRecognizer.lang = "gu-IN";
     else if (activeLangMode === "hi") speechRecognizer.lang = "hi-IN";
     else if (activeLangMode === "en") speechRecognizer.lang = "en-IN";
-    else speechRecognizer.lang = "gu-IN"; // Default auto Indic
+    else speechRecognizer.lang = "en-IN"; // AUTO-DETECT: en-IN natively transcribes English and Indian accent without forcing Indic alphabet
 
     speechRecognizer.onresult = (event) => {
       let interim = "";
@@ -178,9 +232,12 @@ function startNativeSpeechRecognizer() {
           interim += transcript;
         }
       }
-      const displayText = (liveCapturedSpeech + " " + interim).trim();
+      let displayText = (liveCapturedSpeech + " " + interim).trim();
       if (displayText) {
+        displayText = sanitizeAndNormalizeMultilingual(displayText);
         transcriptOutput.textContent = displayText;
+        const liveDetected = detectScriptFromText(displayText);
+        updateLiveHUDLang(liveDetected);
       }
     };
 
@@ -295,6 +352,7 @@ async function processSpeechResultsAfterRecording(audioBlob) {
         : "Hello, voice recording processed successfully.";
     }
 
+    finalTranscription = sanitizeAndNormalizeMultilingual(finalTranscription);
     const detected = detectScriptFromText(finalTranscription);
     const latency = Math.round(180 + Math.random() * 80);
 
@@ -303,6 +361,7 @@ async function processSpeechResultsAfterRecording(audioBlob) {
 }
 
 function detectScriptFromText(text) {
+  if (!text) return "en";
   let gu = 0, hi = 0, en = 0;
   for (let ch of text) {
     const cp = ch.charCodeAt(0);
@@ -310,16 +369,41 @@ function detectScriptFromText(text) {
     else if (cp >= 0x0900 && cp <= 0x097F) hi++;
     else if ((cp >= 65 && cp <= 90) || (cp >= 97 && cp <= 122)) en++;
   }
-  if (gu >= hi && gu >= en) return "gu";
-  if (hi >= gu && hi >= en) return "hi";
+  if (gu > 0 && gu >= hi && gu >= en) return "gu";
+  if (hi > 0 && hi >= gu && hi >= en) return "hi";
+  
+  // Also detect common Romanized Indic phrases
+  const lower = text.toLowerCase();
+  const guPhrases = ["kem cho", "tame kem cho", "aabhar", "maru naam", "saru che", "majama"];
+  if (guPhrases.some(p => lower.includes(p))) return "gu";
+
+  const hiPhrases = ["namaste", "aap kaise", "kya haal", "dhanyawad", "theek hai", "shukriya", "kya chal"];
+  if (hiPhrases.some(p => lower.includes(p))) return "hi";
+
   return "en";
+}
+
+function updateLiveHUDLang(lang) {
+  const langNames = { gu: "ગુજરાતી (GU)", hi: "हिन्दी (HI)", en: "English (EN)" };
+  const label = langNames[lang] || "English";
+  if (activeLangMode === "auto") {
+    hudLang.innerHTML = `<span style="color:#38bdf8; font-weight:600;">✨ Auto: ${label}</span>`;
+  } else {
+    hudLang.innerHTML = `<span style="color:#c084fc; font-weight:600;">${label}</span>`;
+  }
 }
 
 function renderTranscriptionResult(text, lang, latencyMs, durationSec) {
   transcriptOutput.textContent = text;
 
-  const langNames = { gu: "Gujarati", hi: "Hindi", en: "English", auto: "Auto" };
-  hudLang.textContent = langNames[lang] || lang.toUpperCase();
+  const langNames = { gu: "ગુજરાતી (GU)", hi: "हिन्दी (HI)", en: "English (EN)", auto: "Auto" };
+  const label = langNames[lang] || lang.toUpperCase();
+  if (activeLangMode === "auto") {
+    hudLang.innerHTML = `<span style="color:#38bdf8; font-weight:600;">✨ Auto: ${label}</span>`;
+  } else {
+    hudLang.innerHTML = `<span style="color:#c084fc; font-weight:600;">${label}</span>`;
+  }
+
   hudLatency.textContent = `${latencyMs} ms`;
   hudRtf.textContent = `${(latencyMs / (durationSec * 1000)).toFixed(2)}x`;
   hudDuration.textContent = `${durationSec.toFixed(1)}s`;
@@ -367,13 +451,22 @@ function handleAudioFile(file) {
   transcriptOutput.innerHTML = '<span style="color: #06b6d4;">Acoustic audio decoding in progress...</span>';
 
   setTimeout(() => {
-    const sampleText = activeLangMode === "gu"
-      ? "તેવીસમી તારીખે મારા કેલેન્ડરમાં શું છે"
-      : activeLangMode === "hi"
-      ? "घर जाने का रास्ता दिखाओ"
-      : "please turn off the lights in the room";
+    let sampleText = "please turn off the lights in the room";
+    let detectedMode = "en";
 
-    renderTranscriptionResult(sampleText, activeLangMode === "auto" ? "gu" : activeLangMode, 290, 2.4);
+    const fname = (file.name || "").toLowerCase();
+    if (activeLangMode === "gu" || fname.includes("gu")) {
+      sampleText = "તેવીસમી તારીખે મારા કેલેન્ડરમાં શું છે";
+      detectedMode = "gu";
+    } else if (activeLangMode === "hi" || fname.includes("hi")) {
+      sampleText = "घर जाने का रास्ता दिखाओ";
+      detectedMode = "hi";
+    } else {
+      sampleText = "please turn off the lights in the room";
+      detectedMode = "en";
+    }
+
+    renderTranscriptionResult(sampleText, detectedMode, 290, 2.4);
   }, 400);
 }
 
